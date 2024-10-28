@@ -3,10 +3,18 @@ from flask import Flask, render_template, url_for, request, redirect
 
 def addUser(vehicleNumber,password):
     try:
-        mycursor.execute(f"Insert into users (VehicleNumber,Password) Values ({vehicleNumber},{password})")
+        mycursor.execute(f"Insert into users (VehicleNumber,Password) Values ('{vehicleNumber}','{password}')")
         mydb.commit()
     except:
         print(">>> There was some error adding user...:(")
+
+def getData():
+    try:
+        mycursor.execute("SELECT * from users")
+        return mycursor.fetchall()
+    except:
+        print(">>> There was some error retriving data...:(")
+
 
 app = Flask(__name__)
 
@@ -23,25 +31,49 @@ mycursor.execute("""CREATE TABLE IF NOT EXISTS Users (
 mycursor.execute("Select * from users")
 locationVal = mycursor.fetchall()
 print(locationVal)
-
-
-
+isLoggedin = False
 
 @app.route('/',methods=['POST','GET'])
 def index():
+    global isLoggedin
+    if isLoggedin == False:
+        return redirect('/signUp')
     if request.method == 'POST':
-        addUser(request.form['vehicleNumber'],request.form['password']) # name of input 
-        print(locationVal)
         try:
             return redirect('/')
         except:
             return "There was an issue finding your spot..:("
     else:
-        return render_template("index.html",loca = locationVal)
+        return render_template("index.html",loca = getData())
     
-@app.route('/login',methods=['POST','GET'])
-def login():
-    return render_template('login.html')
+@app.route('/signIn',methods=['POST','GET'])
+def signIN():
+    if request.method == 'POST':
+        global isLoggedin
+        addUser(request.form['vehicleNumber'],request.form['password']) # name of input 
+        print(getData())
+        isLoggedin=True
+        return redirect('/')
+    else:
+        return render_template('signIN.html')
+    
+@app.route('/signUp',methods=['POST','GET'])
+def signUp():
+    if request.method == 'POST':
+        global isLoggedin
+        addUser(request.form['vehicleNumber'],request.form['password']) # name of input 
+        print(getData())
+        isLoggedin=True
+        return redirect('/')
+    else:
+        return render_template('signUp.html') 
+
+    
+@app.route("/logout")
+def logout():
+    global isLoggedin
+    isLoggedin=False
+    return redirect('/')
 
 if __name__ == "__main__":
     app.run(debug=True)

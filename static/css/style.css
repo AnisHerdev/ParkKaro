@@ -1,79 +1,96 @@
 /* General Styles */
 body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  /* Navbar Styles */
-  .navbar {
-    width: 100%;
-    background-color: #333;
-    color: white;
-    padding: 1rem;
-    text-align: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-  }
-  
-  .navbar h1 {
-    margin: 0;
-    font-size: 1.5rem;
-  }
-  
-  /* Login Page Styling */
-  .login-container, .location-container {
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 80%;
-    max-width: 400px;
-    margin-top: 6rem; /* To account for the navbar height */
-  }
-  
-  .login-container input, 
-  .location-container select {
-    width: 80%;
-    padding: 0.5rem;
-    margin: 0.5rem 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  button {
-    width: 85%;
-    padding: 0.7rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    color: white;
-  }
-  
-  button:hover {
-    opacity: 0.9;
-  }
-  
-  /* Button Colors */
-  .login-container button {
-    background-color: #4CAF50;
-  }
-  
-  .location-container button {
-    background-color: #2196F3;
-  }
-  
-  /* Message Style */
-  #message {
-    margin-top: 1rem;
-    font-size: 1rem;
-    color: #
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Navbar Styles */
+.navbar {
+  width: 100%;
+  background-color: #333;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.navbar h1 {
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.navbar a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  margin-right: 50px;
+  border-radius: 5px;
+}
+
+.navbar a:hover {
+  background-color: #555;
+}
+
+/* Login Page Styling */
+/* ... rest of the styles ... */
+
+/* Login Page Styling */
+.login-container, .location-container {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 80%;
+  max-width: 400px;
+  margin-top: 6rem; /* To account for the navbar height */
+}
+
+.login-container input, 
+.location-container select {
+  width: 80%;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  width: 85%;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* Button Colors */
+.login-container button {
+  background-color: #4CAF50;
+}
+
+.location-container button {
+  background-color: #2196F3;
+}
+
+/* Message Style */
+#message {
+  margin-top: 1rem;
+  font-size: 1rem;
+  color: red;
+}

@@ -1,0 +1,14 @@
+{%extends 'base.html'%}
+{%block nav%}
+<a href="/signIn">Sign In</a>
+{%endblock%}
+{%block body%}
+  <div class="login-container">
+    <h2>Sign Up</h2>
+    <form action="/signUp" method="POST">
+      <input type="text" placeholder="Vehicle Number" name="vehicleNumber" required>
+      <input type="password" placeholder="Password" name="password" required>
+      <button type="submit">Sign Up</button>
+    </form>
+  </div>
+{%endblock%}
