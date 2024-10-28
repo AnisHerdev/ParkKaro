@@ -1,0 +1,73 @@
+{%extends 'base.html' %}
+{%block body%}
+<form action="/" method="POST">
+<div class="location-container">
+  {% for locat in loca %}
+  <p>{{locat}}</p>
+  {%endfor%}
+  <h2>Select Your Location</h2>
+  <select name="location" id="location">
+    <option value="">--Choose a location--</option>
+    <option value="downtown">Downtown</option>
+    <option value="airport">Airport</option>
+    <option value="mall">Shopping Mall</option>
+  </select>
+  <button onclick="findSpot()">Find Spot</button>
+  <p id="message"></p>
+  <input type="submit" value="Search Location">
+</div>
+</form>
+<script>
+  function findSpot() {
+    const location = document.getElementById('location').value;
+    const message = document.getElementById('message');
+    if (location) {
+      message.textContent = `Finding a parking spot near ${location}...`;
+    } else {
+      message.textContent = "Please select a location.";
+    }
+  }
+  </script>
+{%endblock%}
+
+
+
+
+  <!-- <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Location - ParkKaro</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>ParkKaro</h1>
+    </nav>
+  
+    <div class="location-container">
+      <h2>Select Your Location</h2>
+      <select id="location">
+        <option value="">--Choose a location--</option>
+        <option value="downtown">Downtown</option>
+        <option value="airport">Airport</option>
+        <option value="mall">Shopping Mall</option>
+      </select>
+      <button onclick="findSpot()">Find Spot</button>
+      <p id="message"></p>
+    </div>
+  
+    <script>
+      function findSpot() {
+        const location = document.getElementById('location').value;
+        const message = document.getElementById('message');
+        if (location) {
+          message.textContent = `Finding a parking spot near ${location}...`;
+        } else {
+          message.textContent = "Please select a location.";
+        }
+      }
+    </script>
+  </body>
+  </html> -->

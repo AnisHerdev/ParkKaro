@@ -1,0 +1,15 @@
+{%extends 'base.html'%}
+{%block body%}
+  <nav class="navbar">
+    <h1>ParkKaro</h1>
+  </nav>
+
+  <div class="login-container">
+    <h2>Login</h2>
+    <form action="location.html" method="GET">
+      <input type="text" placeholder="Username" name="username" required>
+      <input type="password" placeholder="Password" name="password" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+{%endblock%}
