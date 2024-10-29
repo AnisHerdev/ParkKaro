@@ -1,1 +1,1 @@
-        locationVal = mycursor.fetchall()
+getData()
