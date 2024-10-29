@@ -53,7 +53,7 @@ def index():
     else:
         return render_template("index.html",loca = getData())
     
-@app.route('/signIn',methods=['POST','GET'])
+@app.route('/login',methods=['POST','GET'])
 def signIN():
     if request.method == 'POST':
         global isLoggedin
@@ -66,9 +66,9 @@ def signIN():
             isLoggedin=True
             return redirect('/')
         else:
-            return render_template('signIN.html', comment = 'Wrong password...:)')
+            return render_template('login.html', comment = 'Wrong password...:)')
     else:
-        return render_template('signIN.html',)
+        return render_template('login.html',)
     
 @app.route('/signUp',methods=['POST','GET'])
 def signUp():

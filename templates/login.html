@@ -4,12 +4,12 @@
 {%endblock%}
 {%block body%}
   <div class="login-container">
-    <h2>Sign In</h2>
-    <form action="/signIn" method="POST">
+    <h2>Login</h2>
+    <form action="/login" method="POST">
       <input type="text" placeholder="Vehicle Number" name="vehicleNumber" required>
       <input type="text" placeholder="Password" name="password" required>
       <!-- <a href="/signIn"> reload</a> -->
-      <button type="submit">Sign In</button>
+      <button type="submit">Login</button>
       <p style="color: red;">{{comment}}</p>
     </form>
   </div>
