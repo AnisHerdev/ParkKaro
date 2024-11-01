@@ -94,3 +94,31 @@ button:hover {
   font-size: 1rem;
   color: red;
 }
+
+/* Styles for the Available Spots List */
+.available-spots {
+  list-style-type: none; /* Remove default bullets */
+  padding: 0; /* Remove padding for a cleaner look */
+  margin: 20px 0; /* Add vertical spacing around the list */
+}
+
+.available-spots li {
+  background-color: #f0f8ff; /* Light background color for list items */
+  margin: 10px 0; /* Space between items */
+  padding: 15px; /* Padding for better readability */
+  border-radius: 5px; /* Rounded corners for aesthetics */
+  border: 1px solid #ccc; /* Subtle border for distinction */
+  display: flex; /* Flexbox for aligning content */
+  justify-content: space-between; /* Space between item content */
+}
+
+.available-spots li a {
+  text-decoration: none; /* Remove underline from links */
+  color: #333; /* Dark text color for contrast */
+  font-weight: bold; /* Make text bold for emphasis */
+  transition: color 0.3s; /* Smooth transition for hover effect */
+}
+
+.available-spots li a:hover {
+  color: #007bff; /* Change text color on hover */
+}

@@ -8,28 +8,39 @@
   {% for locat in loca %}
   <p>{{locat}}</p>
   {%endfor%}
-  <h2>Select Your Location</h2>
-  <select name="location" id="location">
-    <option value="">--Choose a location--</option>
-    <option value="downtown">Pattanagare</option>
-    <option value="airport">Kormangla</option>
-    <option value="mall">Lulu mall</option>
-  </select>
-  <button onclick="findSpot()">Find Spot</button>
-  <p id="message"></p>
-  <input type="submit" value="Search Location">
+  <form action="/" method="POST">
+    <h2>Select Your Location</h2>
+    <select name="location" id="location">
+      <option value="">--Choose a location--</option>
+      <option value="pattanagere">Pattanagare</option>
+      <option value="rr_nagar">Rajarajeshwari nagar</option>
+      <option value="magdi_road">Magdi road</option>
+    </select>
+    <button type="button" onclick="findSpot()">Find Spot</button>
+    <p id="message"></p>
+    <input type="submit" value="Search Location">
+  </form>
 </div>
 </form>
+<div class="location-container">
+  <ul class="available-spots">
+      {% for spot in availableSpots %}
+          <li><a href="/">{{ spot[0] }}</a></li>
+      {% endfor %}
+  </ul>
+</div>
+
 <script>
   function findSpot() {
     const location = document.getElementById('location').value;
     const message = document.getElementById('message');
     if (location) {
-      message.textContent = `Finding a parking spot near ${location}...`;
+      window.location.href = `/${location}`;
     } else {
       message.textContent = "Please select a location.";
     }
   }
   </script>
-{%endblock%}
+
+{% endblock %}
 
