@@ -45,8 +45,22 @@ def getAvailableSpots(location):
     except mysql.connector.Error as error:
         print(">>> There was some error finding spot...:( "+ str(error))
 
-def addBooking(vehicleNumber,):
-    
+def addBooking(vehicleNumber,spotId):
+    try:
+        mycursor.execute("INSERT INTO bookings (vehicleNumber,parking_spot_id) VALUES (%s,%s)",(vehicleNumber,spotId))
+        table=spotId.split('_')[1]
+        if table == "RR":
+            table = "rr_nagar"
+        elif table == "MR":
+            table = "magadi_road"
+        elif table == "P":
+            table = "pattanagare"
+        mycursor.execute(f"UPDATE {table} SET isAvailable=FALSE WHERE parking_spot_id='{spotId}'")
+        mydb.commit()
+        return 1
+    except mysql.connector.Error as error:
+        print(">>> There was some error booking...:( "+ str(error))
+        return -1
 
 app = Flask(__name__)
 
@@ -149,17 +163,18 @@ def logout():
 @app.route("/book/<spotId>",methods=['POST','GET'])
 def booking(spotId):
     if request.method == 'POST':
-        addBooking()
-        return isLoggedin
+        addBooking(isLoggedin,spotId)
+        
+        return f"Booking Confirmed for vehicle {isLoggedin}\nParking Spot: {spotId}"
     loc = spotId.split("_")[1]
     if loc == "RR":
         loc = "Rajarajeshwari Nagar"
     elif loc == "MR":
         loc = "Magadi Road"
     elif loc == "P":
-        loc = "Pattanagare"
+        loc = "Pattanagere"
 
-    return render_template("book.html",location=loc,date = datetime.now().date(), time = datetime.now().time())
+    return render_template("book.html",location=loc,date = datetime.now().date(), time = datetime.now().time(),spot_id = spotId)
     
 
 if __name__ == "__main__":
