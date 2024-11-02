@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parking Checkout</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .summary {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .btn-custom {
+            background-color: green;
+            color: white;
+        }
+        h5{
+            align-self: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="summary">
+        <h2 class="text-center">Checkout for Your Parking Spot</h2>
+        <hr>
+        <h5 style="text-align: center;">Booking Details</h5><br>
+        <p><strong>Booking Id:</strong> <span id="bookingId">{{bookingId}}</span></p>
+        <p><strong>Vehicle Number:</strong> <span id="vehicle-number">{{vehicle_number}}</span></p>
+        <p><strong>Parking Spot:</strong> <span id="parking-spot">{{parking_spot}}</span></p>
+        <p><strong>Location:</strong> <span id="location">{{location}}</span></p>
+        <p><strong>Booking Duration:</strong> <span id="duration">{{duration}}</span></p>
+        
+        <h5 class="mt-4">Charges Summary</h5>
+        <p><strong>Total Amount:</strong> <span id="total-amount">{{cost}}</span></p>
+
+        <div class="text-center">
+            <button class="btn btn-custom" onclick="confirmPayment()">Confirm Payment & Checkout</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function confirmPayment() {
+        alert('Payment has been confirmed! Thank you for your booking.');
+        // Add functionality to handle payment processing here
+    }
+</script>
+
+</body>
+</html>

@@ -5,7 +5,7 @@ from datetime import datetime
 def addUser(vehicleNumber,password):
     try:
         mycursor.execute("SELECT * FROM users WHERE vehicleNumber=%s",(vehicleNumber,))
-        if len(mycursor.fetchall())==0:
+        if len(mycursor.fetchone())==0:
             mycursor.execute("Insert into users (VehicleNumber,Password) Values (%s, %s)",(vehicleNumber,password))
             mydb.commit()
             return 1
@@ -18,11 +18,11 @@ def addUser(vehicleNumber,password):
 def getPassword(vehicleNumber):
     try:
         mycursor.execute("Select password from users where vehiclenumber = %s",(vehicleNumber,))
-        password = mycursor.fetchall()
-        if len(password)==0:
+        password = mycursor.fetchone()
+        if password==None:
             return -1
         else:
-            return password[0][0]
+            return password[0]
     except mysql.connector.Error as error:
         print(">>> There was some error searching for vehicle...:( "+str(error))
         return -1
@@ -54,12 +54,25 @@ def addBooking(vehicleNumber,spotId):
         elif table == "MR":
             table = "magadi_road"
         elif table == "P":
-            table = "pattanagare"
+            table = "pattanagere"
         mycursor.execute(f"UPDATE {table} SET isAvailable=FALSE WHERE parking_spot_id='{spotId}'")
         mydb.commit()
         return 1
     except mysql.connector.Error as error:
         print(">>> There was some error booking...:( "+ str(error))
+        return -1
+    
+def checkIfBooked(vehicleNumber):
+    try:
+        mycursor.execute("SELECT * FROM bookings WHERE vehicleNumber = %s",(vehicleNumber,))
+        output=mycursor.fetchone()
+        print("\n"*10,output)
+        if output == None:
+            return 0
+        else:
+            return output
+    except mysql.connector.Error as error:
+        print(">>> There was some error checking bookings...:( "+ str(error))
         return -1
 
 app = Flask(__name__)
@@ -95,18 +108,18 @@ mycursor = mydb.cursor()
 # INSERT INTO magdi_road (parking_spot_id, isAvailable) VALUES
 # ('5c_MR', TRUE);""")
 
-mycursor.execute("Select * from users")
-locationVal = mycursor.fetchall()
-print(locationVal)
+# mycursor.execute("Select * from users")
+# locationVal = mycursor.fetchall()
+# print(locationVal)
 # print(getPassword('Sumans'))
 # print(addUser('herdev','roti'))
-print(getData())
-isLoggedin = False
+# print(getData())
+loggedInVehicle = None
 
 @app.route('/',methods=['POST','GET'])
 def index():
-    global isLoggedin
-    if isLoggedin == False:
+    global loggedInVehicle
+    if loggedInVehicle == None:
         return redirect('/signUp')
     if request.method == 'POST':
         try:
@@ -116,23 +129,21 @@ def index():
     else:
         return render_template("index.html") #,loca = getData()
 
-@app.route('/<location>')
-def showAvailableSpots(location):
-    return render_template("index.html", availableSpots=getAvailableSpots(location))
 
 
 @app.route('/login',methods=['POST','GET'])
 def login():
     if request.method == 'POST':
-        global isLoggedin
+        global loggedInVehicle
         pw = getPassword(request.form['vehicleNumber']) # name of input 
         givenPw = request.form['password']
-        print(f'{"="*8} {pw} {"="*8}')
-        print(f'{"="*8} {givenPw} {"="*8}')
         if pw == givenPw:
             print("Correct password")
-            isLoggedin= request.form['vehicleNumber']
-            return redirect('/')
+            loggedInVehicle= request.form['vehicleNumber']
+            if checkIfBooked(loggedInVehicle):
+                return redirect('/checkout')
+            else:
+                return redirect('/')
         elif pw == -1:
             return render_template('login.html', comment = 'Create your account by signing up...:)')
         else:
@@ -140,13 +151,17 @@ def login():
     else:
         return render_template('login.html',)
     
+@app.route('/<location>')
+def showAvailableSpots(location):
+    return render_template("index.html", availableSpots=getAvailableSpots(location))
+
 @app.route('/signUp',methods=['POST','GET'])
 def signUp():
     if request.method == 'POST':
-        global isLoggedin
+        global loggedInVehicle
         code=addUser(request.form['vehicleNumber'],request.form['password']) # name of input 
         if code ==1:
-            isLoggedin= request.form['vehicleNumber']
+            loggedInVehicle= request.form['vehicleNumber']
             return redirect('/')
         elif code ==0:
             return render_template('signUp.html',comment="Account already exists...")
@@ -156,16 +171,16 @@ def signUp():
     
 @app.route("/logout")
 def logout():
-    global isLoggedin
-    isLoggedin=False
+    global loggedInVehicle
+    loggedInVehicle=None
     return redirect('/')
 
 @app.route("/book/<spotId>",methods=['POST','GET'])
 def booking(spotId):
     if request.method == 'POST':
-        addBooking(isLoggedin,spotId)
+        addBooking(loggedInVehicle,spotId)
         
-        return f"Booking Confirmed for vehicle {isLoggedin}\nParking Spot: {spotId}"
+        return f"Booking Confirmed for vehicle {loggedInVehicle}\nParking Spot: {spotId}"
     loc = spotId.split("_")[1]
     if loc == "RR":
         loc = "Rajarajeshwari Nagar"
@@ -176,8 +191,22 @@ def booking(spotId):
 
     return render_template("book.html",location=loc,date = datetime.now().date(), time = datetime.now().time(),spot_id = spotId)
     
+@app.route("/checkout")
+def checkout():
+    global loggedInVehicle
+    data = checkIfBooked(loggedInVehicle)
+    print("\n"*20,data)
+    loc = data[2].split('_')[1]
+    if loc == "RR":
+        loc = "Rajarajeshwari Nagar"
+    elif loc == "MR":
+        loc = "Magadi Road"
+    elif loc == "P":
+        loc = "Pattanagere"
+    return render_template("checkout.html",bookingId=data[0],vehicle_number=data[1],parking_spot=data[2],location=loc,duration=data[4],cost=89)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
+    print(checkIfBooked('Suman')[2])
     mycursor.close()
     mydb.close()    

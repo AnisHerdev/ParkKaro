@@ -96,7 +96,7 @@ INSERT INTO magdi_road (parking_spot_id, status) VALUES
 
 CREATE TABLE BOOKINGS(
     bookingId INTEGER PRIMARY KEY AUTO_INCREMENT,
-    vehicleNumber Varchar(20) NOT NULL,
+    vehicleNumber Varchar(20) NOT NULL UNIQUE,
     parking_spot_id VARCHAR(10) NOT NULL,
     startTime timestamp default current_timestamp,
     endTime timestamp
