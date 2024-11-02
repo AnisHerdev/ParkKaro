@@ -122,3 +122,9 @@ button:hover {
 .available-spots li a:hover {
   color: #007bff; /* Change text color on hover */
 }
+
+.location-container{
+  /* display: flex; */
+  /* justify-content: space-between; */
+  /* align-self: flex-end; */
+}

@@ -18,18 +18,20 @@
     </select>
     <button type="button" onclick="findSpot()">Find Spot</button>
     <p id="message"></p>
-    <input type="submit" value="Search Location">
   </form>
 </div>
 </form>
-<div class="location-container">
-  <ul class="available-spots">
-      {% for spot in availableSpots %}
-          <li><a href="/">{{ spot[0] }}</a></li>
-      {% endfor %}
-  </ul>
-</div>
-
+{% if availableSpots|length < 1 %}
+ <center><h4>Choose one location to see the spots</h4></center>
+ {% else %}
+  <div class="location-container">
+    <ul class="available-spots">
+        {% for spot in availableSpots %}
+            <li><a href="/book/{{spot[0]}}">{{ spot[0] }}</a></li>
+        {% endfor %}
+    </ul>
+  </div>
+{%endif%}
 <script>
   function findSpot() {
     const location = document.getElementById('location').value;
