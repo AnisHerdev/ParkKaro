@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% extends 'base.html' %}
+{% block nav %}
+<a href="/logout">Logout</a>
+{% endblock %}
+{% block head %}
     <title>Parking Checkout</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <style>
-        body {
-            background-color: #f8f9fa;
-        }
         .container {
             margin-top: 50px;
         }
@@ -22,13 +20,12 @@
             background-color: green;
             color: white;
         }
-        h5{
+        h5 {
             align-self: center;
         }
     </style>
-</head>
-<body>
-
+{% endblock %}
+{% block body %}
 <div class="container">
     <div class="summary">
         <h2 class="text-center">Checkout for Your Parking Spot</h2>
@@ -42,10 +39,12 @@
         
         <h5 class="mt-4">Charges Summary</h5>
         <p><strong>Total Amount:</strong> <span id="total-amount">{{cost}}</span></p>
-
-        <div class="text-center">
-            <button class="btn btn-custom" onclick="confirmPayment()">Confirm Payment & Checkout</button>
-        </div>
+        <form action=""method='POST'>
+            <div class="text-center">
+                <button class="btn btn-custom">Confirm Payment & Checkout</button>
+                <button class="btn btn-secondary" onclick="generatePDF()">Download PDF</button>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -54,7 +53,30 @@
         alert('Payment has been confirmed! Thank you for your booking.');
         // Add functionality to handle payment processing here
     }
-</script>
 
-</body>
-</html>
+    async function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const bookingId = document.getElementById('bookingId').innerText;
+    const vehicleNumber = document.getElementById('vehicle-number').innerText;
+    const parkingSpot = document.getElementById('parking-spot').innerText;
+    const location = document.getElementById('location').innerText;
+    const duration = document.getElementById('duration').innerText;
+    const totalAmount = document.getElementById('total-amount').innerText;
+
+    doc.setFontSize(16);
+    doc.text("Checkout Report", 105, 20, { align: "center" });
+    doc.setFontSize(12);
+    doc.text(`Booking Id: ${bookingId}`, 14, 30);
+    doc.text(`Vehicle Number: ${vehicleNumber}`, 14, 40);
+    doc.text(`Parking Spot: ${parkingSpot}`, 14, 50);
+    doc.text(`Location: ${location}`, 14, 60);
+    doc.text(`Booking Duration: ${duration}`, 14, 70);
+    doc.text(`Total Amount: ${totalAmount}`, 14, 80);
+
+    doc.save(`Booking_Report_${bookingId}.pdf`);
+}
+
+</script>
+{% endblock %}

@@ -62,11 +62,26 @@ def addBooking(vehicleNumber,spotId):
         print(">>> There was some error booking...:( "+ str(error))
         return -1
     
+def makeAvailable(spotId):
+    try:
+        table=spotId.split('_')[1]
+        if table == "RR":
+            table = "rr_nagar"
+        elif table == "MR":
+            table = "magadi_road"
+        elif table == "P":
+            table = "pattanagere"
+        mycursor.execute(f"UPDATE {table} SET isAvailable=TRUE WHERE parking_spot_id='{spotId}'")
+        mydb.commit()
+        return 1
+    except mysql.connector.Error as error:
+        print(">>> There was some error booking...:( "+ str(error))
+        return -1
+    
 def checkIfBooked(vehicleNumber):
     try:
         mycursor.execute("SELECT * FROM bookings WHERE vehicleNumber = %s",(vehicleNumber,))
         output=mycursor.fetchone()
-        print("\n"*10,output)
         if output == None:
             return 0
         else:
@@ -74,7 +89,17 @@ def checkIfBooked(vehicleNumber):
     except mysql.connector.Error as error:
         print(">>> There was some error checking bookings...:( "+ str(error))
         return -1
+def calcCost(bookingId):
+    try:
+        mycursor.execute(f"UPDATE bookings SET endTime=current_timestamp WHERE bookingId='{bookingId}'")
+        mycursor.execute(f"UPDATE bookings SET duration=TIMESTAMPDIFF(minute,startTime, endTime) WHERE bookingId='{bookingId}'")
+        mycursor.execute("SELECT TIMESTAMPDIFF(minute,startTime, endTime)*0.167 from bookings where bookingId=%s",(bookingId,))
+        return mycursor.fetchone()
+    except mysql.connector.Error as error:
+        print(">>> There was some error calculating cost...:( "+ str(error))
+        return -1
 
+    
 app = Flask(__name__)
 
 mydb = mysql.connector.connect(host="localhost",
@@ -120,7 +145,9 @@ loggedInVehicle = None
 def index():
     global loggedInVehicle
     if loggedInVehicle == None:
-        return redirect('/signUp')
+        return redirect('/login')
+    if checkIfBooked(loggedInVehicle):
+        return redirect('/checkout')
     if request.method == 'POST':
         try:
             return redirect('/')
@@ -191,11 +218,13 @@ def booking(spotId):
 
     return render_template("book.html",location=loc,date = datetime.now().date(), time = datetime.now().time(),spot_id = spotId)
     
-@app.route("/checkout")
+@app.route("/checkout",methods=['POST','GET'])
 def checkout():
     global loggedInVehicle
     data = checkIfBooked(loggedInVehicle)
-    print("\n"*20,data)
+    if request.method == 'POST':
+        makeAvailable(data[2])
+        return "Thank you come back again"
     loc = data[2].split('_')[1]
     if loc == "RR":
         loc = "Rajarajeshwari Nagar"
@@ -203,10 +232,10 @@ def checkout():
         loc = "Magadi Road"
     elif loc == "P":
         loc = "Pattanagere"
-    return render_template("checkout.html",bookingId=data[0],vehicle_number=data[1],parking_spot=data[2],location=loc,duration=data[4],cost=89)
+    return render_template("checkout.html",bookingId=data[0],vehicle_number=data[1],parking_spot=data[2],location=loc,duration=data[4],cost=calcCost(data[0]))
 
 if __name__ == "__main__":
-    # app.run(debug=True)
-    print(checkIfBooked('Suman')[2])
+    app.run(debug=True)
+    # print(checkIfBooked('Suman')[2].split('_')[1])
     mycursor.close()
     mydb.close()    

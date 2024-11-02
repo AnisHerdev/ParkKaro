@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ParkKaro</title>
   <link rel="stylesheet" href="{{ url_for('static',filename='css/style.css')}}">
+  {%block head%}{%endblock%}
 </head>
 <body>
     <nav class="navbar">
@@ -12,6 +13,8 @@
         <a href="/"><img src="/static/parkkarologo.png" height="40px"></a>
         {%block nav%}{%endblock%}
       </nav>
+    <br>
     {% block body%} {% endblock %}
+
 </body>
 </html>

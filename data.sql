@@ -99,5 +99,6 @@ CREATE TABLE BOOKINGS(
     vehicleNumber Varchar(20) NOT NULL UNIQUE,
     parking_spot_id VARCHAR(10) NOT NULL,
     startTime timestamp default current_timestamp,
-    endTime timestamp
+    endTime timestamp,
+    duration timestamp
 );

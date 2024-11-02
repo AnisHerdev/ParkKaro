@@ -4,7 +4,7 @@ body {
   padding: 0;
   box-sizing: border-box;
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
+  background-color: bisque;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,10 +42,6 @@ body {
   background-color: #555;
 }
 
-/* Login Page Styling */
-/* ... rest of the styles ... */
-
-/* Login Page Styling */
 .login-container, .location-container {
   background-color: #fff;
   padding: 2rem;
