@@ -93,7 +93,9 @@ def checkIfBooked(vehicleNumber):
 def updateEndTime(bookingId):
     try:
         mycursor.execute(f"UPDATE bookings SET endTime=current_timestamp WHERE bookingId='{bookingId}'")
+        print(f"UPDATE bookings SET endTime=current_timestamp WHERE bookingId='{bookingId}'")
         mycursor.execute(f"UPDATE bookings SET duration=TIMESTAMPDIFF(minute,startTime, endTime) WHERE bookingId='{bookingId}'")
+        print(f"UPDATE bookings SET duration=TIMESTAMPDIFF(minute,startTime, endTime) WHERE bookingId='{bookingId}'")
         return 0
     except mysql.connector.Error as error:
         print(">>> There was some error calculating cost...:( "+ str(error))
@@ -103,6 +105,7 @@ def calcCost(bookingId):
     try:
         mycursor.execute(f"UPDATE bookings SET endTime=current_timestamp WHERE bookingId='{bookingId}'")
         mycursor.execute(f"UPDATE bookings SET duration=TIMESTAMPDIFF(minute,startTime, endTime) WHERE bookingId='{bookingId}'")
+        mydb.commit()
         mycursor.execute("SELECT TIMESTAMPDIFF(minute,startTime, endTime)*0.167 from bookings where bookingId=%s",(bookingId,))
         return mycursor.fetchone()[0]
     except mysql.connector.Error as error:
@@ -111,7 +114,9 @@ def calcCost(bookingId):
 
 def finishBooking(bookingId):
     try:
+        print("\n"*10,"Delete from bookings where bookingId=%s",(bookingId,))
         mycursor.execute("Delete from bookings where bookingId=%s",(bookingId,))
+        mydb.commit()
         return 0
     except mysql.connector.Error as error:
         print(">>> There was some error deleting the booking ID...:( "+ str(error))
@@ -196,7 +201,7 @@ def login():
     else:
         return render_template('login.html',)
     
-@app.route('/<location>')
+@app.route('/show/<location>')
 def showAvailableSpots(location):
     return render_template("index.html", availableSpots=getAvailableSpots(location))
 
@@ -240,8 +245,10 @@ def booking(spotId):
 def checkout():
     global loggedInVehicle
     data = checkIfBooked(loggedInVehicle)
+    print("\n"*10,loggedInVehicle)
+    updateEndTime(data[0])
+    data = checkIfBooked(loggedInVehicle)
     if request.method == 'POST':
-        updateEndTime(data[0])
         makeAvailable(data[2])
         return redirect("/bill")
     loc = data[2].split('_')[1]
@@ -259,6 +266,7 @@ def bill():
         return redirect("/")
     global loggedInVehicle
     data = checkIfBooked(loggedInVehicle)
+    updateEndTime(data[0])
     _cost = calcCost(data[0])
     finishBooking(data[0])
     print("\n"*10,data)
@@ -274,5 +282,6 @@ def bill():
 if __name__ == "__main__":
     app.run(debug=True)
     # print(checkIfBooked('Suman')[2].split('_')[1])
+    # print(updateEndTime('8'))
     mycursor.close()
     mydb.close()    

@@ -37,7 +37,7 @@
     const location = document.getElementById('location').value;
     const message = document.getElementById('message');
     if (location) {
-      window.location.href = `/${location}`;
+      window.location.href = `/show/${location}`;
     } else {
       message.textContent = "Please select a location.";
     }
