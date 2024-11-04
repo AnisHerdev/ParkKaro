@@ -1,1 +1,1 @@
-loc
+calcCost

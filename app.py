@@ -224,7 +224,7 @@ def checkout():
     data = checkIfBooked(loggedInVehicle)
     if request.method == 'POST':
         makeAvailable(data[2])
-        return "Thank you come back again"
+        return redirect("/bill")
     loc = data[2].split('_')[1]
     if loc == "RR":
         loc = "Rajarajeshwari Nagar"
@@ -232,10 +232,24 @@ def checkout():
         loc = "Magadi Road"
     elif loc == "P":
         loc = "Pattanagere"
-    return render_template("checkout.html",bookingId=data[0],vehicle_number=data[1],parking_spot=data[2],location=loc,duration=data[4],cost=calcCost(data[0]))
+    return render_template("checkout.html",bookingId=data[0],vehicle_number=data[1],parking_spot=data[2],location=loc,duration=data[5],cost=calcCost(data[0]))
+
+@app.route("/bill")
+def bill():
+    data = checkIfBooked(loggedInVehicle)
+    print("\n"*10,data)
+    loc = data[2].split('_')[1]
+    if loc == "RR":
+        loc = "Rajarajeshwari Nagar"
+    elif loc == "MR":
+        loc = "Magadi Road"
+    elif loc == "P":
+        loc = "Pattanagere"
+    return render_template("bill.html",bookingId=data[0],vehicle_number=data[1],parking_spot=data[2],location=loc,duration=data[5],cost=calcCost(data[0]))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # app.run(debug=True)
     # print(checkIfBooked('Suman')[2].split('_')[1])
+    print(calcCost('1'))
     mycursor.close()
     mydb.close()    

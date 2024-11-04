@@ -100,5 +100,5 @@ CREATE TABLE BOOKINGS(
     parking_spot_id VARCHAR(10) NOT NULL,
     startTime timestamp default current_timestamp,
     endTime timestamp,
-    duration timestamp
+    duration INTEGER
 );

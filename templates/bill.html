@@ -3,7 +3,7 @@
 <a href="/logout">Logout</a>
 {% endblock %}
 {% block head %}
-    <title>Parking Checkout</title>
+    <title>Bill</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <style>
@@ -28,21 +28,21 @@
 {% block body %}
 <div class="container">
     <div class="summary">
-        <h2 class="text-center">Checkout for Your Parking Spot</h2>
+        <h2 class="text-center">Bill:</h2>
         <hr>
         <h5 style="text-align: center;">Booking Details</h5><br>
         <p><strong>Booking Id:</strong> <span id="bookingId">{{bookingId}}</span></p>
         <p><strong>Vehicle Number:</strong> <span id="vehicle-number">{{vehicle_number}}</span></p>
         <p><strong>Parking Spot:</strong> <span id="parking-spot">{{parking_spot}}</span></p>
         <p><strong>Location:</strong> <span id="location">{{location}}</span></p>
-        <p><strong>Duration Until Now:</strong> <span id="duration">{{duration}} mins</span></p>
+        <p><strong>Booking Duration:</strong> <span id="duration">{{duration}} mins</span></p>
         
         <h5 class="mt-4">Charges Summary</h5>
         <p><strong>Total Amount:</strong> <span id="total-amount">Rs {{cost}}</span></p>
         <form action=""method='POST'>
             <div class="text-center">
-                <button class="btn btn-custom">Confirm Payment & Checkout</button>
-                <!-- <button class="btn btn-secondary" onclick="generatePDF()">Download PDF</button> -->
+                <!-- <button class="btn btn-custom">Confirm Payment & Checkout</button> -->
+                <button class="btn btn-secondary" onclick="generatePDF()">Download PDF</button>
             </div>
         </form>
     </div>
