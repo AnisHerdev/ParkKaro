@@ -5,7 +5,7 @@ from datetime import datetime
 def addUser(vehicleNumber,password):
     try:
         mycursor.execute("SELECT * FROM users WHERE vehicleNumber=%s",(vehicleNumber,))
-        if len(mycursor.fetchone())==0:
+        if mycursor.fetchone()==None:
             mycursor.execute("Insert into users (VehicleNumber,Password) Values (%s, %s)",(vehicleNumber,password))
             mydb.commit()
             return 1
@@ -89,14 +89,32 @@ def checkIfBooked(vehicleNumber):
     except mysql.connector.Error as error:
         print(">>> There was some error checking bookings...:( "+ str(error))
         return -1
+
+def updateEndTime(bookingId):
+    try:
+        mycursor.execute(f"UPDATE bookings SET endTime=current_timestamp WHERE bookingId='{bookingId}'")
+        mycursor.execute(f"UPDATE bookings SET duration=TIMESTAMPDIFF(minute,startTime, endTime) WHERE bookingId='{bookingId}'")
+        return 0
+    except mysql.connector.Error as error:
+        print(">>> There was some error calculating cost...:( "+ str(error))
+        return -1
+
 def calcCost(bookingId):
     try:
         mycursor.execute(f"UPDATE bookings SET endTime=current_timestamp WHERE bookingId='{bookingId}'")
         mycursor.execute(f"UPDATE bookings SET duration=TIMESTAMPDIFF(minute,startTime, endTime) WHERE bookingId='{bookingId}'")
         mycursor.execute("SELECT TIMESTAMPDIFF(minute,startTime, endTime)*0.167 from bookings where bookingId=%s",(bookingId,))
-        return mycursor.fetchone()
+        return mycursor.fetchone()[0]
     except mysql.connector.Error as error:
         print(">>> There was some error calculating cost...:( "+ str(error))
+        return -1
+
+def finishBooking(bookingId):
+    try:
+        mycursor.execute("Delete from bookings where bookingId=%s",(bookingId,))
+        return 0
+    except mysql.connector.Error as error:
+        print(">>> There was some error deleting the booking ID...:( "+ str(error))
         return -1
 
     
@@ -207,7 +225,7 @@ def booking(spotId):
     if request.method == 'POST':
         addBooking(loggedInVehicle,spotId)
         
-        return f"Booking Confirmed for vehicle {loggedInVehicle}\nParking Spot: {spotId}"
+        return redirect('/checkout') #f"Booking Confirmed for vehicle {loggedInVehicle}\nParking Spot: {spotId}"
     loc = spotId.split("_")[1]
     if loc == "RR":
         loc = "Rajarajeshwari Nagar"
@@ -223,6 +241,7 @@ def checkout():
     global loggedInVehicle
     data = checkIfBooked(loggedInVehicle)
     if request.method == 'POST':
+        updateEndTime(data[0])
         makeAvailable(data[2])
         return redirect("/bill")
     loc = data[2].split('_')[1]
@@ -234,9 +253,14 @@ def checkout():
         loc = "Pattanagere"
     return render_template("checkout.html",bookingId=data[0],vehicle_number=data[1],parking_spot=data[2],location=loc,duration=data[5],cost=calcCost(data[0]))
 
-@app.route("/bill")
+@app.route("/bill",methods=['POST','GET'])
 def bill():
+    if request.method == "POST":
+        return redirect("/")
+    global loggedInVehicle
     data = checkIfBooked(loggedInVehicle)
+    _cost = calcCost(data[0])
+    finishBooking(data[0])
     print("\n"*10,data)
     loc = data[2].split('_')[1]
     if loc == "RR":
@@ -245,11 +269,10 @@ def bill():
         loc = "Magadi Road"
     elif loc == "P":
         loc = "Pattanagere"
-    return render_template("bill.html",bookingId=data[0],vehicle_number=data[1],parking_spot=data[2],location=loc,duration=data[5],cost=calcCost(data[0]))
+    return render_template("bill.html",bookingId=data[0],vehicle_number=data[1],parking_spot=data[2],location=loc,duration=data[5],cost=_cost)
 
 if __name__ == "__main__":
-    # app.run(debug=True)
+    app.run(debug=True)
     # print(checkIfBooked('Suman')[2].split('_')[1])
-    print(calcCost('1'))
     mycursor.close()
     mydb.close()    
