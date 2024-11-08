@@ -1,4 +1,26 @@
-INSERT INTO rr_nagar (parking_spot_id, status) VALUES
+CREATE DATABASE IF NOT EXISTS ParkKaro;
+USE ParkKaro;
+CREATE TABLE IF NOT EXISTS users (
+                 VehicleNumber VARCHAR(20) PRIMARY KEY,
+                 Password VARCHAR(20),
+                 emailId VARCHAR(255),
+                 ph_no INTEGER(12)
+);
+CREATE TABLE IF NOT EXISTS rr_nagar (
+    parking_spot_id VARCHAR(10) PRIMARY KEY,
+    isAvailable BOOLEAN NOT NULL
+);
+CREATE TABLE IF NOT EXISTS magdi_road (
+    parking_spot_id VARCHAR(10) PRIMARY KEY,
+    isAvailable BOOLEAN NOT NULL
+);
+CREATE TABLE IF NOT EXISTS pattanagere (
+    parking_spot_id VARCHAR(10) PRIMARY KEY,
+    isAvailable BOOLEAN NOT NULL
+);
+
+
+INSERT INTO rr_nagar (parking_spot_id, isAvailable) VALUES
 ('1a_RR', TRUE),
 ('2a_RR', FALSE),
 ('3a_RR', TRUE),
@@ -30,7 +52,7 @@ INSERT INTO rr_nagar (parking_spot_id, status) VALUES
 ('29a_RR', TRUE),
 ('30a_RR', FALSE);
 
-INSERT INTO pattanagere (parking_spot_id, status) VALUES
+INSERT INTO pattanagere (parking_spot_id, isAvailable) VALUES
 ('1a_P', FALSE),
 ('2a_P', TRUE),
 ('3a_P', FALSE),
@@ -62,7 +84,7 @@ INSERT INTO pattanagere (parking_spot_id, status) VALUES
 ('29a_P', FALSE),
 ('30a_P', TRUE);
 
-INSERT INTO magdi_road (parking_spot_id, status) VALUES
+INSERT INTO magdi_road (parking_spot_id, isAvailable) VALUES
 ('1a_MR', TRUE),
 ('2a_MR', FALSE),
 ('3a_MR', TRUE),

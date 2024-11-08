@@ -2,11 +2,11 @@ import mysql.connector
 from flask import Flask, render_template, url_for, request, redirect
 from datetime import datetime
 
-def addUser(vehicleNumber,password):
+def addUser(vehicleNumber,email,ph_no,password):
     try:
         mycursor.execute("SELECT * FROM users WHERE vehicleNumber=%s",(vehicleNumber,))
         if mycursor.fetchone()==None:
-            mycursor.execute("Insert into users (VehicleNumber,Password) Values (%s, %s)",(vehicleNumber,password))
+            mycursor.execute("Insert into users (VehicleNumber,emailId,ph_no,Password) Values (%s, %s, %s, %s)",(vehicleNumber,email,ph_no,password))
             mydb.commit()
             return 1
         else:
@@ -209,7 +209,7 @@ def showAvailableSpots(location):
 def signUp():
     if request.method == 'POST':
         global loggedInVehicle
-        code=addUser(request.form['vehicleNumber'],request.form['password']) # name of input 
+        code=addUser(request.form['vehicleNumber'],request.form['email'],request.form['ph_no'],request.form['password']) # name of input 
         if code ==1:
             loggedInVehicle= request.form['vehicleNumber']
             return redirect('/')
