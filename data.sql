@@ -19,6 +19,33 @@ CREATE TABLE IF NOT EXISTS pattanagere (
     isAvailable BOOLEAN NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS all_parking_spots (
+    parking_spot_id VARCHAR(10) PRIMARY KEY
+);
+
+INSERT INTO all_parking_spots (parking_spot_id)
+    SELECT parking_spot_id FROM rr_nagar
+    UNION
+    SELECT parking_spot_id FROM magdi_road
+    UNION
+    SELECT parking_spot_id FROM pattanagere;
+
+
+CREATE TABLE BOOKINGS(
+    bookingId INTEGER PRIMARY KEY AUTO_INCREMENT,
+    vehicleNumber Varchar(20) NOT NULL UNIQUE,
+    parking_spot_id VARCHAR(10) NOT NULL,
+    startTime timestamp default current_timestamp,
+    endTime timestamp,
+    duration INTEGER,
+
+    CONSTRAINT fk_vehicleNumber
+        FOREIGN KEY (vehicleNumber) REFERENCES users(VehicleNumber)
+        ON DELETE CASCADE,
+    CONSTRAINT fk_parkingSpot
+        FOREIGN KEY (parking_spot_id) REFERENCES all_parking_spots(parking_spot_id)
+        ON DELETE CASCADE
+);
 
 INSERT INTO rr_nagar (parking_spot_id, isAvailable) VALUES
 ('1a_RR', TRUE),
@@ -115,12 +142,3 @@ INSERT INTO magdi_road (parking_spot_id, isAvailable) VALUES
 ('28a_MR', FALSE),
 ('29a_MR', TRUE),
 ('30a_MR', FALSE);
-
-CREATE TABLE BOOKINGS(
-    bookingId INTEGER PRIMARY KEY AUTO_INCREMENT,
-    vehicleNumber Varchar(20) NOT NULL UNIQUE,
-    parking_spot_id VARCHAR(10) NOT NULL,
-    startTime timestamp default current_timestamp,
-    endTime timestamp,
-    duration INTEGER
-);
