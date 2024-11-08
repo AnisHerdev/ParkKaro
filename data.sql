@@ -23,13 +23,6 @@ CREATE TABLE IF NOT EXISTS all_parking_spots (
     parking_spot_id VARCHAR(10) PRIMARY KEY
 );
 
-INSERT INTO all_parking_spots (parking_spot_id)
-    SELECT parking_spot_id FROM rr_nagar
-    UNION
-    SELECT parking_spot_id FROM magdi_road
-    UNION
-    SELECT parking_spot_id FROM pattanagere;
-
 
 CREATE TABLE BOOKINGS(
     bookingId INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -142,3 +135,11 @@ INSERT INTO magdi_road (parking_spot_id, isAvailable) VALUES
 ('28a_MR', FALSE),
 ('29a_MR', TRUE),
 ('30a_MR', FALSE);
+
+INSERT INTO all_parking_spots (parking_spot_id)
+    SELECT parking_spot_id FROM rr_nagar
+    UNION
+    SELECT parking_spot_id FROM magdi_road
+    UNION
+    SELECT parking_spot_id FROM pattanagere;
+
