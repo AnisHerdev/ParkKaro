@@ -281,7 +281,5 @@ def bill():
 
 if __name__ == "__main__":
     app.run(debug=True)
-    # print(checkIfBooked('Suman')[2].split('_')[1])
-    # print(updateEndTime('8'))
     mycursor.close()
     mydb.close()    
